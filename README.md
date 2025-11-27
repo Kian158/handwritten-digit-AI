@@ -19,4 +19,4 @@ Hidden layer: 64 neurons, sigmoid activation
 Output layer: 10 neurons, linear output (softmax is computed during loss calculation)
 
 # Comments
-As I learn more about machine learning, I realise it's just a lot of linear algebra. I've studied this a lot with my degree, and the applications here click naturally. Backpropogation is just the chain rule, and while it was confusing at first to find all the different rates of change, it makes a lot of sense now. This project really helped with my understanding, and was a good and classic example to build from scratch. I can see how this can be scaled up, and applied to many things.
+As I learn more about machine learning, I realise it's just a lot of linear algebra. I've studied this a lot with my degree, and the applications here click naturally. Backpropagation is just the chain rule, and while it was confusing at first to find all the different rates of change, it makes a lot of sense now. This project really helped with my understanding, and was a good and classic example to build from scratch. I can see how this can be scaled up, and applied to many things.
