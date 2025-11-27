@@ -1,0 +1,85 @@
+import numpy as np
+from keras.datasets import mnist ## dataset of 70,000 handwritten digits
+
+
+epochs = 1
+
+(train_imgs, train_numbers), (test_imgs, test_numbers) = mnist.load_data()
+
+lr = 0.1 ## learning rate
+
+## -- sigmoid function -- ##
+
+def sig(x):
+    return 1 / (1 + np.exp(-x))
+
+
+## -- initialise weight and bias -- ##
+W1 = np.random.randn(64, 784) * 0.01
+W2 = np.random.randn(10, 64) * 0.01
+
+
+b1 = np.zeros(64)
+b2 = np.zeros(10)
+
+for e in range(epochs):
+    for j in range(60000):
+        
+        photo = train_imgs[j]
+    
+        
+        real = train_numbers[j] ## 1 to 9 from training data label
+        
+        
+        v0 = photo.flatten() / 255 # shape (784,)
+        
+            
+        ## -- compute next vectors -- ##
+        v1 = sig(np.matmul(W1, v0) + b1)
+        
+        v2 = np.matmul(W2, v1) + b2
+        
+        
+        ## -- compute loss function -- ##
+        
+        v2_shifted = v2 - np.max(v2) ## shift to avoid huge exponentials
+        L = -v2_shifted[real] + np.log( np.sum( np.exp(v2_shifted) ) )
+        
+        ## -- gradient of loss -- ##
+        
+        softmax = np.exp(v2_shifted) / np.sum(np.exp(v2_shifted))
+        dL_dv2 = softmax
+        dL_dv2[real] -= 1
+        
+        ## -- adjust prev layer -- ##
+        dL_dW2 = np.outer(dL_dv2, v1)
+        dL_db2 = dL_dv2
+        
+        W2 -= lr * dL_dW2
+        b2 -= lr* dL_db2
+        
+        ## -- adjust next layer -- ##
+        dL_dv1 = np.matmul(W2.T, dL_dv2)
+        
+        dL_dv1 *= v1 * (1 - v1) ## derivative of sigmoid
+        
+        dL_dW1 = np.outer(dL_dv1, v0) 
+        dL_db1 = dL_dv1
+        
+        W1 -= lr * dL_dW1
+        b1 -= lr* dL_db1
+    
+## -- test model -- ##
+
+correct = 0
+
+for j in range(10000):
+    v0 = test_imgs[j].flatten() / 255
+    v1 = sig(W1 @ v0 + b1)
+    v2 = W2 @ v1 + b2
+    choice = np.argmax(v2)
+    if choice == test_numbers[j]:
+        correct += 1
+
+print("Test accuracy:", correct / 10000)
+        
